@@ -8,7 +8,7 @@ function MeetupDetails(props){
     const meetupId = router.query.meetupId
     return <Fragment>
         <Head>
-            <title>{props.meetupData.title}</title>
+            {/* <title>{props.meetupData.title}</title> */}
         </Head>
 <MeetupDetail image={props.meetupData.image} 
                         title={props.meetupData.title} 
@@ -26,7 +26,7 @@ export async function getStaticPaths(){
 
     client.close()
     return {
-        fallback: true, //false mean support all item in the list, outside of list give 404 error. true just generate dynamically on the server incoming request. 
+        fallback: false, //false mean support all item in the list, outside of list give 404 error. true just generate dynamically on the server incoming request. 
         paths : meetups.map(meetup =>( {params: {meetupId:meetup._id.toString()}}))
         //  [
         //     {

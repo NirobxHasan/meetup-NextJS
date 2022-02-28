@@ -1,24 +1,56 @@
+import {MongoClient} from 'mongodb'
 import MeetupList from "../components/meetups/MeetupList"
 import Layout from '../components/layout/Layout'
-const DUMMY_MEETUP= [
-  {
-    id:'m1',
-    title: 'A First Meetup',
-  
-    image:'https://images.unsplash.com/photo-1527126887308-6cdf83c7d844?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80',
-    description:'This is a second meetup'
-  },
-  {
-    id:'m2',
-    title: 'A Second Meetup',
-  
-    image:'https://images.unsplash.com/photo-1527126887308-6cdf83c7d844?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80',
-    description:'This is a second meetup'
-  },
-];
-const HomePage =()=>{
-  return <Layout>
-    <MeetupList meetups={DUMMY_MEETUP}/>
-  </Layout> 
+
+const HomePage =(props)=>{
+  return  <MeetupList meetups={props.meetup}/>
+ 
 }
+
+
+// *** page generate in build process
+
+export async function getStaticProps(){
+
+  const client = await MongoClient.connect('mongodb+srv://nextjs_project:sShnXd5RFMlCiswr@cluster0.jiiff.mongodb.net/meetups?retryWrites=true&w=majority');
+        const db = client.db();
+
+        const meetupsCollection = db.collection('meetsup');
+
+  const meetups = await meetupsCollection.find({}).toArray();  
+  client.close();  
+
+  return {
+    props:{
+      meetup: meetups.map(meetup =>(
+        {
+          title: meetup.title,
+          address: meetup.address,
+          image: meetup.image,
+          id: meetup._id.toString()
+
+        }
+      ))
+    },
+    revalidate:10 //when data frequantly change, it will run every 10s . Time depends on how frequantly data changed.
+  }
+}
+
+
+
+//**** if page changes every incoming request
+
+// export async function getServerSideProps(context){
+
+//   const req= context.req;
+//   const res = context.res;
+
+//   return {
+//     props:{
+//       meetup: DUMMY_MEETUP
+//     }
+//   };
+// }
+
 export default HomePage;
+

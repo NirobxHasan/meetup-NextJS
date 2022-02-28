@@ -32,7 +32,7 @@ export async function getStaticProps(){
         }
       ))
     },
-    revalidate:10 //when data frequantly change, it will run every 10s . Time depends on how frequantly data changed.
+    revalidate:1 //when data frequantly change, it will run every 10s . Time depends on how frequantly data changed.
   }
 }
 

@@ -26,7 +26,7 @@ export async function getStaticPaths(){
 
     client.close()
     return {
-        fallback: false, //false mean support all item in the list, outside of list give 404 error. true just generate dynamically on the server incoming request. 
+        fallback: 'blocking', //false mean support all item in the list, outside of list give 404 error. true/'blocking' just generate dynamically on the server incoming request. 
         paths : meetups.map(meetup =>( {params: {meetupId:meetup._id.toString()}}))
         //  [
         //     {
